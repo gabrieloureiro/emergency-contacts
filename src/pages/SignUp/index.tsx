@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback, useRef } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -18,9 +18,15 @@ import {
   BackToSignInButton,
   BackToSignInButtonText,
 } from "./styles";
+import { FormHandles } from "@unform/core";
+import { Form } from "@unform/mobile";
 
 const SignUp = () => {
   const navigation = useNavigation();
+  const formRef = useRef<FormHandles>(null)
+  const handleSignIn = useCallback((data: object) => {
+    console.log(data)
+  }, []);
   return (
     <Fragment>
       <KeyboardAvoidingView
@@ -36,10 +42,12 @@ const SignUp = () => {
             <View>
               <Title>Faça seu cadastro</Title>
             </View>
-            <Input name="name" icon="user" placeholder="Usuário"></Input>
-            <Input name="email" icon="mail" placeholder="E-mail"></Input>
-            <Input name="password" icon="lock" placeholder="Senha"></Input>
-            <Button onPress={() => { }}>Cadastrar</Button>
+            <Form ref={formRef} onSubmit={handleSignIn}>
+              <Input name="name" icon="user" placeholder="Usuário"></Input>
+              <Input name="email" icon="mail" placeholder="E-mail"></Input>
+              <Input name="password" icon="lock" placeholder="Senha"></Input>
+              <Button onPress={() => { }}>Cadastrar</Button>
+            </Form>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
