@@ -10,8 +10,6 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import Icon from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
-
-
 import {
   Container,
   Title,
@@ -20,12 +18,28 @@ import {
 } from "./styles";
 import { FormHandles } from "@unform/core";
 import { Form } from "@unform/mobile";
+import { TextInput } from "react-native-gesture-handler";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface SignUpProps {
+  name: string
+  email: string
+  password: string
+}
 
 const SignUp = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null)
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data)
+  const emailRef = useRef<TextInput>(null)
+  const passwordRef = useRef<TextInput>(null)
+
+  const handleSignUp = useCallback(async (data: SignUpProps) => {
+    try {
+      const dataToString = JSON.stringify(data)
+      await AsyncStorage.setItem('credentials', dataToString)
+    } catch (e) {
+      console.error(e)
+    }
   }, []);
   return (
     <Fragment>
@@ -42,11 +56,38 @@ const SignUp = () => {
             <View>
               <Title>Faça seu cadastro</Title>
             </View>
-            <Form ref={formRef} onSubmit={handleSignIn}>
-              <Input name="name" icon="user" placeholder="Usuário"></Input>
-              <Input name="email" icon="mail" placeholder="E-mail"></Input>
-              <Input name="password" icon="lock" placeholder="Senha"></Input>
-              <Button onPress={() => { }}>Cadastrar</Button>
+            <Form ref={formRef} onSubmit={handleSignUp}>
+              <Input
+                autoCorrect={true}
+                autoCapitalize="words"
+                name="name"
+                icon="user"
+                placeholder="Usuário"
+                returnKeyType="next"
+                onSubmitEditing={() => emailRef.current?.focus()}
+              />
+              <Input
+                ref={emailRef}
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
+              />
+              <Input
+                ref={passwordRef}
+                textContentType="newPassword"
+                secureTextEntry
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                returnKeyType="send"
+                onSubmitEditing={() => formRef.current?.submitForm()}
+              />
+              <Button onPress={() => formRef.current?.submitForm()}>Cadastrar</Button>
             </Form>
           </Container>
         </ScrollView>

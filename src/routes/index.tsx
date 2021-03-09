@@ -1,25 +1,26 @@
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import React, { useCallback, useEffect, useState } from 'react'
+import AuthRoutes from './auth.routes'
+import AppRoutes from './app.routes'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import SignIn from "../pages/SignIn";
-import SignUp from "../pages/SignUp";
+const Routes: React.FC = () => {
+  const [isLogged, setIsLogged] = useState('false')
 
-const Auth = createStackNavigator();
+  const handleIsLogged = useCallback(async () => {
+    try {
+      const logged = await AsyncStorage.getItem('isLogged')
+      Boolean(logged) ? setIsLogged('true') : isLogged
+    } catch (e) {
+      console.error(e)
+    }
+  }, [])
 
-const AuthRoutes = () => {
-  return (
-    <Auth.Navigator
-      screenOptions={{
-        headerShown: false,
-        cardStyle: {
-          backgroundColor: "#16161B",
-        },
-      }}
-    >
-      <Auth.Screen name="SignIn" component={SignIn} />
-      <Auth.Screen name="SignUp" component={SignUp} />
-    </Auth.Navigator>
-  );
-};
+  useEffect(() => {
+    handleIsLogged()
+  }, [isLogged])
 
-export default AuthRoutes;
+
+  return isLogged ? <AppRoutes /> : <AuthRoutes />
+}
+
+export default Routes

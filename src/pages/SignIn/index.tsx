@@ -20,12 +20,34 @@ import {
   CreateAccountButton,
   CreateAccountButtonText,
 } from "./styles";
+import { TextInput } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface SignInProps {
+  email: string
+  password: string
+}
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null)
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data)
+  const passwordInputRef = useRef<TextInput>(null)
+
+  const handleSignIn = useCallback(async (data: SignInProps) => {
+    try {
+      const storageData = await AsyncStorage.getItem('credentials')
+      const parsedStorageData = storageData !== null ? JSON.parse(storageData) : null;
+      console.log(parsedStorageData)
+      if (
+        data.email === parsedStorageData.email
+        &&
+        data.password === parsedStorageData.password
+      ) {
+        await AsyncStorage.setItem('isLogged', 'true')
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }, []);
 
   return (
@@ -44,9 +66,26 @@ const SignIn: React.FC = () => {
               <Title>Faça seu logon</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignIn}>
-              <Input name="email" icon="mail" placeholder="E-mail"></Input>
-              <Input name="password" icon="lock" placeholder="Senha"></Input>
-              <Button onPress={() => formRef.current?.submitForm}>Entrar</Button>
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                returnKeyType="next"
+                onSubmitEditing={() => passwordInputRef.current?.focus()}
+              />
+              <Input
+                ref={passwordInputRef}
+                secureTextEntry
+                returnKeyType="send"
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                onSubmitEditing={() => formRef.current?.submitForm()}
+              />
+              <Button onPress={() => formRef.current?.submitForm()}>Entrar</Button>
             </Form>
             <ForgotPasswordButton>
               <ForgotPasswordButtonText>
