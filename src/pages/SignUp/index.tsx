@@ -4,6 +4,7 @@ import {
   Platform,
   View,
   ScrollView,
+  Alert,
 } from "react-native";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -20,7 +21,7 @@ import { Form } from "@unform/mobile";
 import { TextInput } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface SignUpProps {
+export interface SignUpProps {
   name: string
   email: string
   password: string
@@ -36,6 +37,10 @@ const SignUp = () => {
     try {
       const dataToString = JSON.stringify(data)
       await AsyncStorage.setItem('credentials', dataToString)
+      Alert.alert('Usuário criado com sucesso')
+      setTimeout(() => {
+        navigation.navigate("SignIn")
+      }, 500);
     } catch (e) {
       console.error(e)
     }

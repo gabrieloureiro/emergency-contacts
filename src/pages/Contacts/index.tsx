@@ -6,9 +6,9 @@ import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+
 const MyContacts: React.FC = () => {
   const [contacts, setContacts] = useState<any>([])
-  const [savedContacts, setSavedContacts] = useState<any>([])
 
   async function hasAndroidPermission() {
     const permission = PermissionsAndroid.PERMISSIONS.READ_CONTACTS;
@@ -32,16 +32,12 @@ const MyContacts: React.FC = () => {
   };
 
   const handleContactsToStore = async (item: any) => {
-    setSavedContacts([...savedContacts, item])
-
     try {
       const storageContacts = await AsyncStorage.getItem('savedContacts')
-      const parsedStorageData = storageContacts !== null ? JSON.parse(storageContacts) : null;
+      const parsedStorageData = storageContacts !== null ? JSON.parse(storageContacts) : [];
 
 
-
-      await AsyncStorage.setItem('savedContacts', JSON.stringify(savedContacts))
-      console.log(savedContacts)
+      await AsyncStorage.setItem('savedContacts', JSON.stringify([...parsedStorageData, item]))
     } catch (e) {
       console.error(e)
     }

@@ -4,6 +4,7 @@ import {
   Platform,
   View,
   ScrollView,
+  Alert,
 } from "react-native";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -34,7 +35,7 @@ const SignIn: React.FC = () => {
   const handleSignIn = useCallback(async (data: SignInProps) => {
     try {
       const storageData = await AsyncStorage.getItem('credentials')
-      const parsedStorageData = storageData !== null ? JSON.parse(storageData) : null;
+      const parsedStorageData = storageData !== null ? JSON.parse(storageData) : {};
       console.log(parsedStorageData)
       if (
         data.email === parsedStorageData.email
@@ -43,7 +44,8 @@ const SignIn: React.FC = () => {
       ) {
         await AsyncStorage.setItem('isLogged', 'true')
         navigation.navigate('AppRoutes')
-
+      } else {
+        Alert.alert('Login ou senha incorreto!')
       }
     } catch (e) {
       console.error(e)

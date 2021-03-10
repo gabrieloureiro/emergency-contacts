@@ -34,14 +34,13 @@ const Routes = () => {
         },
       }}
     >
-      {isLogged ?
-        <Auth.Screen name="AppRoutes" component={AppRoutes} />
-        :
-        <>
-          <Auth.Screen name="SignIn" component={SignIn} />
-          <Auth.Screen name="SignUp" component={SignUp} />
-        </>
-      }
+
+      <>
+        <Auth.Screen name="SignIn" component={SignIn} />
+        <Auth.Screen name="SignUp" component={SignUp} />
+        {isLogged && <Auth.Screen name="AppRoutes" component={AppRoutes} />}
+      </>
+
     </Auth.Navigator>
   );
 };

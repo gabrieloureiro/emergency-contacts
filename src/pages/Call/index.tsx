@@ -1,12 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useEffect, useState } from 'react'
-import { Text, View } from 'react-native'
-import { CallWrapper, Header, HeaderText } from './styles'
-import { useIsFocused, useFocusEffect } from "@react-navigation/native";
+import { CallWrapper, Header, HeaderText, ItemList, Avatar, Name, CallList, WelcomeText } from './styles'
+import { useIsFocused } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/Feather';
+import { Linking } from 'react-native'
+
 
 const Call: React.FC = () => {
   const [contactsToCall, setContactsToCall] = useState([])
   const isFocused = useIsFocused()
+  const [username, setUsername] = useState()
 
   const getSavedContacts = useCallback(async () => {
     try {
@@ -19,6 +22,21 @@ const Call: React.FC = () => {
     }
   }, []);
 
+  const getName = useCallback(async () => {
+    try {
+      const storageData = await AsyncStorage.getItem('credentials')
+      const parsedStorageData = storageData !== null ? JSON.parse(storageData) : {};
+      setUsername(parsedStorageData.name)
+
+    } catch (e) {
+      console.error(e)
+    }
+  }, []);
+
+  useEffect(() => {
+    getName()
+  }, [isFocused])
+
 
   useEffect(() => {
     getSavedContacts()
@@ -29,11 +47,24 @@ const Call: React.FC = () => {
       <Header>
         <HeaderText>Ligar para seus contatos</HeaderText>
       </Header>
-      {contactsToCall?.map((item: any, index) => {
-        return (
-          <Text key={`${item.recordID}_${index}`}>{item.givenName}</Text>
-        )
-      })}
+      <WelcomeText>Bem vindo, {username}</WelcomeText>
+      <CallList
+        data={contactsToCall}
+        keyExtractor={(item: any, index) => item.recordID + index}
+        renderItem={({ item }: any) => {
+          return (
+            <ItemList onPress={() => Linking.openURL(`tel:${item.phoneNumbers.map(p => p.number)[0]}`)}>
+              <Avatar>
+                <Icon
+                  name="phone"
+                  color="#189943"
+                  size={26}
+                />
+              </Avatar>
+              <Name style={{ marginRight: 'auto' }}>{item.givenName} {item.middleName} {item.familyName}</Name>
+            </ItemList>
+          )
+        }} />
     </CallWrapper>
   )
 }
