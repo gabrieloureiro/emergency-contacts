@@ -1,9 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import AuthRoutes from './auth.routes'
-import AppRoutes from './app.routes'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useCallback, useEffect, useState } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 
-const Routes: React.FC = () => {
+import SignIn from "../pages/SignIn";
+import SignUp from "../pages/SignUp";
+import AppRoutes from "./app.routes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const Auth = createStackNavigator();
+
+const Routes = () => {
+
   const [isLogged, setIsLogged] = useState('false')
 
   const handleIsLogged = useCallback(async () => {
@@ -19,8 +25,25 @@ const Routes: React.FC = () => {
     handleIsLogged()
   }, [isLogged])
 
+  return (
+    <Auth.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: {
+          backgroundColor: "#16161B",
+        },
+      }}
+    >
+      {isLogged ?
+        <Auth.Screen name="AppRoutes" component={AppRoutes} />
+        :
+        <>
+          <Auth.Screen name="SignIn" component={SignIn} />
+          <Auth.Screen name="SignUp" component={SignUp} />
+        </>
+      }
+    </Auth.Navigator>
+  );
+};
 
-  return isLogged ? <AppRoutes /> : <AuthRoutes />
-}
-
-export default Routes
+export default Routes;

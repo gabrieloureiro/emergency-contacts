@@ -15,8 +15,6 @@ import { FormHandles } from "@unform/core"
 import {
   Container,
   Title,
-  ForgotPasswordButton,
-  ForgotPasswordButtonText,
   CreateAccountButton,
   CreateAccountButtonText,
 } from "./styles";
@@ -44,6 +42,8 @@ const SignIn: React.FC = () => {
         data.password === parsedStorageData.password
       ) {
         await AsyncStorage.setItem('isLogged', 'true')
+        navigation.navigate('AppRoutes')
+
       }
     } catch (e) {
       console.error(e)
@@ -63,7 +63,7 @@ const SignIn: React.FC = () => {
         >
           <Container>
             <View>
-              <Title>Faça seu logon</Title>
+              <Title>Faça seu login</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignIn}>
               <Input
@@ -87,11 +87,6 @@ const SignIn: React.FC = () => {
               />
               <Button onPress={() => formRef.current?.submitForm()}>Entrar</Button>
             </Form>
-            <ForgotPasswordButton>
-              <ForgotPasswordButtonText>
-                Esqueci minha senha
-              </ForgotPasswordButtonText>
-            </ForgotPasswordButton>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>

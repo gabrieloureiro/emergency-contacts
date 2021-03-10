@@ -2,24 +2,36 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Call from "../pages/Call";
 import Icon from "react-native-vector-icons/Feather";
-import Contacts from "../pages/Contacts";
+import MyContacts from "../pages/Contacts";
 import Profile from "../pages/Profile";
 
 const App = createBottomTabNavigator();
 
 const customTabBarStyle = {
   activeTintColor: '#6e37e0',
-  inactiveTintColor: 'white',
-  style: { backgroundColor: '#16161B', height: 60 },
+  inactiveTintColor: '#ccc',
+  style: {
+    backgroundColor: '#16161B', height: 60, borderTopWidth: 0,
+    borderTopColor: "transparent",
+
+    elevation: 0,
+    shadowColor: '#5bc4ff',
+    shadowOpacity: 0,
+    shadowOffset: {
+      height: 0,
+    },
+    shadowRadius: 0,
+    borderTopHeight: 0
+  },
 };
 
 const AppRoutes = () => {
   return (
     <App.Navigator
-      initialRouteName="call"
+      initialRouteName="Call"
       tabBarOptions={customTabBarStyle}
     >
-      <App.Screen name="call"
+      <App.Screen name="Call"
         options={{
           tabBarLabel: 'Ligar',
           tabBarIcon: ({ color }) => (
@@ -28,16 +40,16 @@ const AppRoutes = () => {
         }}
         component={Call}
       />
-      <App.Screen name="contacts"
+      <App.Screen name="MyContacts"
         options={{
           tabBarLabel: 'Contatos',
           tabBarIcon: ({ color }) => (
             <Icon name="user-plus" color={color} size={26} />
           ),
         }}
-        component={Contacts}
+        component={MyContacts}
       />
-      <App.Screen name="profile"
+      <App.Screen name="Profile"
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (

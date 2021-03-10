@@ -15,15 +15,6 @@ export const Title = styled.Text`
   padding: 64px 0 24px;
 `;
 
-export const ForgotPasswordButton = styled.TouchableOpacity`
-  margin-top: 16px;
-`;
-
-export const ForgotPasswordButtonText = styled.Text`
-  color: #fff;
-  font-size: 16px;
-  font-family: "Poppins-Regular";
-`;
 
 export const CreateAccountButton = styled.TouchableOpacity`
   position: absolute;

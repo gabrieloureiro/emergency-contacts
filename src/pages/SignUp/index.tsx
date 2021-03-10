@@ -1,6 +1,5 @@
 import React, { Fragment, useCallback, useRef } from "react";
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   View,
@@ -41,6 +40,7 @@ const SignUp = () => {
       console.error(e)
     }
   }, []);
+
   return (
     <Fragment>
       <KeyboardAvoidingView
